@@ -55,3 +55,12 @@ class TestViews(TestCase):
         updated_item = Item.objects.get(id=item.id)
         # Asserts that it is in fact done
         self.assertFalse(updated_item.done)
+
+    def test_can_edit_item(self):
+        item = Item.objects.create(name='Test Todo Item')
+        # Checks that a name can be updated with post method
+        response = self.client.post(f'/edit/{item.id}', {'name': 'Updated Name'})
+        self.assertRedirects(response, '/')
+        updated_item = Item.objects.get(id=item.id)
+        # Checks that updated name actually is the new field we added
+        self.assertEqual(updated_item.name, 'Updated Name')
